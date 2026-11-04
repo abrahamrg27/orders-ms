@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
+import { ChangeOrderStatusDto } from './dto/change-order-status-dto.js';
 import { CreateOrderDto } from './dto/create-order.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { OrderPaginationDto } from './dto/order-pagination.dto.js';
@@ -40,7 +41,7 @@ export class OrdersService {
 
     if (!order) {
       throw new RpcException({
-        status: 404,
+        status: HttpStatus.NOT_FOUND,
         message: `Order with ID ${id} not found`,
       });
     }
@@ -48,5 +49,12 @@ export class OrdersService {
     return order;
   }
 
-  changeSOrderStatus() {}
+  async changeOrderStatus({ id, status }: ChangeOrderStatusDto) {
+    await this.findOne(id);
+
+    return this.prisma.order.update({
+      where: { id },
+      data: { status },
+    });
+  }
 }

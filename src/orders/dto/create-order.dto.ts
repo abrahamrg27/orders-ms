@@ -11,8 +11,8 @@ export class CreateOrderDto {
   totalItem: number;
 
   @IsEnum(OrderStatusList, {
-    message: `positive status values ar : ${OrderStatusList.join((', '))}`,
-    })
-    @IsOptional()
+    message: `positive status values ar : ${OrderStatusList.join(', ')}`,
+  })
+  @IsOptional()
   status: OrderStatus = OrderStatus.PENDING;
 }
